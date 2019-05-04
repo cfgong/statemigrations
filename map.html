@@ -1,0 +1,154 @@
+<html>
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.states {
+  fill: #ccc;
+  stroke: #fff;
+}
+
+.symbol {
+  fill-opacity: .8;
+  stroke: #fff;
+}
+
+.arcs path {
+  stroke-width: 2px;
+  stroke: tomato;
+  pointer-events: none;
+  fill: none;
+}
+
+</style>
+<body>
+<!--Rather than loading v3 or v4, loading individual modules to ensure compatibility with v4 functions (loads newest version of each)-->
+<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+<script src="https://d3js.org/d3-selection.v1.min.js"></script>
+<script src="https://d3js.org/d3-array.v1.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="https://d3js.org/d3-collection.v0.1.min.js"></script>
+<script src="https://d3js.org/d3-dispatch.v0.4.min.js"></script>
+<script src="https://d3js.org/d3-dsv.v0.3.min.js"></script>
+<script src="https://d3js.org/d3-request.v0.4.min.js"></script>
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+<script>
+
+var width = 960,
+    height = 500;
+
+var projection = d3.geoAlbersUsa();
+var path = d3.geoPath()
+	.projection(projection);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+
+// load up the json files, and when we're done, call ready
+d3.queue()
+    .defer(d3_request.json, "states.json")
+    .defer(d3_request.json, "us-state-centroids.json")
+    .await(ready);
+
+// keep these around for later
+var us,centroid;
+
+
+function ready(error, u, c) {
+
+  // store the values so we can use them later
+   states = u
+   centroid = c
+
+  // draw the states
+
+  svg.append("path")
+      .attr("class", "states")
+      .datum(topojson.feature(states, states.objects.usStates))
+      .attr("d", path)
+      .on("click", function(d, i) {
+        var currentState = this;
+        console.log(currentState);
+      });
+
+      var arcdata = [
+    	  {
+          leaving: "California",
+          to: "Illinois",
+    			sourceLocation: [-99.5606025, 41.068178502813595],
+    			targetLocation: [-106.503961875, 33.051502817366334]
+    	  },
+    		{
+          leaving: "Colorado",
+          to: "Kansas",
+    			sourceLocation: [-99.5606025, 41.068178502813595],
+    			targetLocation: [-97.27544625, 34.29490081496779]
+    		}
+    	]
+
+var arcs = svg.append("g")
+      			.attr("class","arcs");
+
+
+arcs.selectAll("path")
+    .data(arcdata)
+    .enter()
+    .append("path")
+    .attr('d', function(d) {
+        return lngLatToArc(d, 'sourceLocation', 'targetLocation', 15);
+    });
+
+}
+
+
+function lngLatToArc(d, sourceName, targetName, bend){
+  // If no bend is supplied, then do the plain square root
+  bend = bend || 1;
+  // `d[sourceName]` and `d[targetname]` are arrays of `[lng, lat]`
+  // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
+
+  var sourceLngLat = d[sourceName],
+      targetLngLat = d[targetName];
+
+  if (targetLngLat && sourceLngLat) {
+    var sourceXY = projection( sourceLngLat ),
+        targetXY = projection( targetLngLat );
+
+    // Uncomment this for testing, useful to see if you have any null lng/lat values
+    // if (!targetXY) console.log(d, targetLngLat, targetXY)
+    var sourceX = sourceXY[0],
+        sourceY = sourceXY[1];
+
+    var targetX = targetXY[0],
+        targetY = targetXY[1];
+
+    var dx = targetX - sourceX,
+        dy = targetY - sourceY,
+        dr = Math.sqrt(dx * dx + dy * dy)*bend;
+
+    // To avoid a whirlpool effect, make the bend direction consistent regardless of whether the source is east or west of the target
+    var west_of_source = (targetX - sourceX) < 0;
+    if (west_of_source) return "M" + targetX + "," + targetY + "A" + dr + "," + dr + " 0 0,1 " + sourceX + "," + sourceY;
+    return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + targetX + "," + targetY;
+
+  } else {
+    return "M0,0,l0,0z";
+  }
+}
+
+function recolor(color) {
+
+  // grab the symbol objects and modify their color
+  // notice we don't need "enter" or "append" the objects are already there
+   svg.selectAll(".symbol")
+      .attr("fill",color);
+}
+
+
+
+</script>
+
+</body>
+</html>
