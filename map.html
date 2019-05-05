@@ -93,7 +93,8 @@ d3.json('states.json', function(error, us) {
 		})
     .on('mouseout', function(d){
       var name = d.properties.STATE_ABBR;
-      d3.select("#California").remove();
+      var svg_id = "#" + name;
+      d3.select(svg_id).remove();
     });
     /*
   svg = svg.append("g")
@@ -110,10 +111,10 @@ d3.json('states.json', function(error, us) {
       svg = svg.append("g")
                .attr("class", "arcs");
       svg.selectAll('.arcs')
-         .data(California)
+         .data(window[state])
          .enter()
          .append('path')
-         .attr('id', "California")
+         .attr('id', state)
          .attr('d', function(d) {
                return lngLatToArc(d, 'sourceLocation', 'targetLocation', 15);
          });
