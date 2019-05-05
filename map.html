@@ -19,7 +19,7 @@ h1 {
 .states:hover {
 	fill: steelblue;
 }
-.arcs path {
+.arcs {
   stroke-width: 2px;
   stroke: tomato;
   pointer-events: none;
@@ -38,6 +38,7 @@ var width = 960,
 var svg = d3.select('body').append('svg')
 	.attr('width', width)
 	.attr('height', height);
+
 
 var projection = d3.geo.albersUsa()
 	.scale(1000)
@@ -61,6 +62,24 @@ var arcdata = [
     }
 ]
 
+var California = [
+      {
+        leaving: "California",
+        to: "Texas",
+        sourceLocation: [-119.355165,35.458606],
+        targetLocation: [-97.388631,30.943149]
+      }
+]
+
+var Washington = [
+      {
+        leaving: "Washington",
+        to: "California",
+        sourceLocation: [-121.624501,47.341728],
+        targetLocation: [-119.355165,35.458606]
+      }
+]
+
 d3.json('states.json', function(error, us) {
 	svg.selectAll('.states')
 		.data(topojson.feature(us, us.objects.usStates).features)
@@ -70,10 +89,15 @@ d3.json('states.json', function(error, us) {
 		.attr('d', path)
 		.on('mouseover', function(d){
 			var name = d.properties.STATE_ABBR;
-			return document.getElementById('name').innerHTML=name;
-		});
+			return drawArcs(name);
+		})
+    .on('mouseout', function(d){
+      var name = d.properties.STATE_ABBR;
+      d3.select("#California").remove();
+    });
+    /*
   svg = svg.append("g")
-     .attr("class","arcs");
+             .attr("class","arcs");
   svg.selectAll('.arcs')
     .data(arcdata)
     .enter()
@@ -81,7 +105,22 @@ d3.json('states.json', function(error, us) {
     .attr('d', function(d) {
           return lngLatToArc(d, 'sourceLocation', 'targetLocation', 15);
     });
+  */
+    function drawArcs(state) {
+      svg = svg.append("g")
+               .attr("class", "arcs");
+      svg.selectAll('.arcs')
+         .data(California)
+         .enter()
+         .append('path')
+         .attr('id', "California")
+         .attr('d', function(d) {
+               return lngLatToArc(d, 'sourceLocation', 'targetLocation', 15);
+         });
+    }
 });
+
+
 
 function lngLatToArc(d, sourceName, targetName, bend){
       // If no bend is supplied, then do the plain square root
