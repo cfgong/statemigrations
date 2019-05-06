@@ -47,6 +47,32 @@ var projection = d3.geo.albersUsa()
 var path = d3.geo.path()
 	.projection(projection);
 
+var state_centers = {};
+
+d3.csv("/data/cleaned/state_centers.csv", function(data){
+  data.forEach(function(d){
+    console.log(d["state"]);
+    state_centers[d["state"]] = [+d["latitude"], +d["longtitude"]];
+    console.log(state_centers);
+  });
+});
+
+var incoming_states = {};
+d3.csv("/data/cleaned/state2017.csv", function(data){
+  data.forEach(function(d){
+    console.log(d["starting"]);
+    incoming_states[d["starting"]] = d["ending"];
+  });
+});
+
+d3.csv("/data/cleaned/state_centers.csv", function(data){
+  data.forEach(function(d){
+    console.log(d["state"]);
+    state_centers[d["state"]] = [+d["latitude"], +d["longtitude"]];
+    console.log(state_centers);
+  });
+});
+
 var arcdata = [
       {
         leaving: "California",
@@ -96,18 +122,11 @@ d3.json('states.json', function(error, us) {
       var svg_id = "#" + name;
       d3.select(svg_id).remove();
     });
-    /*
-  svg = svg.append("g")
-             .attr("class","arcs");
-  svg.selectAll('.arcs')
-    .data(arcdata)
-    .enter()
-    .append('path')
-    .attr('d', function(d) {
-          return lngLatToArc(d, 'sourceLocation', 'targetLocation', 15);
-    });
-  */
     function drawArcs(state) {
+      var incoming = incoming_states[state];
+      var curr_state_center = state_centers[state];
+      var incoming_state_center = state_centers[incoming];
+      console.log(state + " has incoming state " + incoming + " from " + incoming_state_center + " to " + curr_state_center);
       svg = svg.append("g")
                .attr("class", "arcs");
       svg.selectAll('.arcs')
@@ -128,7 +147,6 @@ function lngLatToArc(d, sourceName, targetName, bend){
       bend = bend || 1;
       // `d[sourceName]` and `d[targetname]` are arrays of `[lng, lat]`
       // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
-
       var sourceLngLat = d[sourceName],
           targetLngLat = d[targetName];
 
