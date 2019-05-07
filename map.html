@@ -126,16 +126,43 @@ d3.json('states.json', function(error, us) {
       var incoming = incoming_states[state];
       var curr_state_center = state_centers[state];
       var incoming_state_center = state_centers[incoming];
-      console.log(state + " has incoming state " + incoming + " from " + incoming_state_center + " to " + curr_state_center);
+      var links = [];
+      /*
+      links.push({
+           type: "LineString",
+           coordinates: [
+               [data_of_state[0]['sourceLocation'][0], data_of_state[0]['sourceLocation'][1]],
+               [data_of_state[0]['targetLocation'][0], data_of_state[0]['targetLocation'][1]]
+           ]
+      });
+      */
+      /*
+      links.push({
+           type: "LineString",
+           coordinates: [
+               [36.116203, -119.681564],
+               [31.054487, -97.563461]
+           ]
+      });
+      */
+      links.push({
+            type: "LineString",
+            coordinates: [
+                [-121.624501, 47.341728],
+                [-119.355165, 35.458606]
+            ]
+        });
+      //console.log(state + " has incoming state " + incoming + " from " + incoming_state_center + " to " + curr_state_center);
       svg = svg.append("g")
                .attr("class", "arcs");
+
       svg.selectAll('.arcs')
-         .data(window[state])
+         .data(links)
          .enter()
          .append('path')
          .attr('id', state)
          .attr('d', function(d) {
-               return lngLatToArc(d, 'sourceLocation', 'targetLocation', 15);
+               return lngLatToArc(d, 0, 1, 15);
          });
     }
 });
@@ -147,8 +174,11 @@ function lngLatToArc(d, sourceName, targetName, bend){
       bend = bend || 1;
       // `d[sourceName]` and `d[targetname]` are arrays of `[lng, lat]`
       // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
-      var sourceLngLat = d[sourceName],
-          targetLngLat = d[targetName];
+
+      var sourceLngLat = d['coordinates'][sourceName],
+          targetLngLat = d['coordinates'][targetName];
+      console.log(sourceLngLat);
+      console.log(targetLngLat);
 
       if (targetLngLat && sourceLngLat) {
         var sourceXY = projection( sourceLngLat ),
