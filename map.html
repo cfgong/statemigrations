@@ -106,11 +106,11 @@ d3.json('states.json', function(error, us) {
 		.attr('class', 'states')
 		.attr('d', path)
 		.on('mouseover', function(d){
-			var name = d.properties.STATE_ABBR;
+			var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
 			return drawArcs(name);
 		})
     .on('mouseout', function(d){
-      var name = d.properties.STATE_ABBR;
+      var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
       var svg_id = "#" + name;
       d3.select(svg_id).remove();
     });
