@@ -65,14 +65,6 @@ d3.csv("/data/cleaned/state2017.csv", function(data){
   });
 });
 
-d3.csv("/data/cleaned/state_centers.csv", function(data){
-  data.forEach(function(d){
-    console.log(d["state"]);
-    state_centers[d["state"]] = [+d["latitude"], +d["longtitude"]];
-    console.log(state_centers);
-  });
-});
-
 var arcdata = [
       {
         leaving: "California",
