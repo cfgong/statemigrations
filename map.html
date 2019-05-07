@@ -52,7 +52,7 @@ var state_centers = {};
 d3.csv("/data/cleaned/state_centers.csv", function(data){
   data.forEach(function(d){
     console.log(d["state"]);
-    state_centers[d["state"]] = [+d["latitude"], +d["longtitude"]];
+    state_centers[d["state"]] = [+d["longtitude"], +d["latitude"]];
     console.log(state_centers);
   });
 });
@@ -148,8 +148,8 @@ d3.json('states.json', function(error, us) {
       links.push({
             type: "LineString",
             coordinates: [
-                [-121.624501, 47.341728],
-                [-119.355165, 35.458606]
+                curr_state_center,
+                incoming_state_center
             ]
         });
       //console.log(state + " has incoming state " + incoming + " from " + incoming_state_center + " to " + curr_state_center);
