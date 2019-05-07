@@ -51,8 +51,8 @@ var state_centers = {};
 
 d3.csv("/data/cleaned/state_centers.csv", function(data){
   data.forEach(function(d){
-    console.log(d["state"]);
-    state_centers[d["state"]] = [+d["longtitude"], +d["latitude"]];
+    console.log(d["state"].replace(/\s+/g, ''));
+    state_centers[d["state"].replace(/\s+/g, '')] = [+d["longtitude"], +d["latitude"]];
     console.log(state_centers);
   });
 });
@@ -60,8 +60,8 @@ d3.csv("/data/cleaned/state_centers.csv", function(data){
 var incoming_states = {};
 d3.csv("/data/cleaned/state2017.csv", function(data){
   data.forEach(function(d){
-    console.log(d["starting"]);
-    incoming_states[d["starting"]] = d["ending"];
+    console.log(d["starting"].replace(/\s+/g, ''));
+    incoming_states[d["starting"].replace(/\s+/g, '')] = d["ending"].replace(/\s+/g, '');
   });
 });
 
