@@ -25,9 +25,14 @@ h1 {
   pointer-events: none;
   fill: none;
 }
+form {
+  float: right;
+}
 </style>
 <body>
-<div id="info"><h1 id="name"></h1></div>
+<div id="info">
+  <h1 id="title"></h1>
+</div>
 <!-- form radio buttons created with javascript-->
 <form id = "yearForm"></form>
 
@@ -89,13 +94,18 @@ h1 {
     }
     document.getElementById("yearForm").appendChild(createRadioYearButton(i, checkedBool));
   }
+  function setTitle(yearDate){
+    document.getElementById("title").innerHTML = "State migrations in year " + yearDate; // change title
+  }
   // set default year
   var currYear = FIRST_YEAR.toString();
+  setTitle(currYear);
 
   // function for radio buttons
   function setYear(yearDate){
     console.log(yearDate);
-    currYear = yearDate;
+    currYear = yearDate; // set new current year
+    setTitle(yearDate);
   }
 
   // for the map drawing and arc graphing
