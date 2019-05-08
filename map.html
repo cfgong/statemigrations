@@ -65,39 +65,6 @@ d3.csv("/data/cleaned/state2017.csv", function(data){
   });
 });
 
-var arcdata = [
-      {
-        leaving: "California",
-        to: "Illinois",
-        sourceLocation: [-99.5606025, 41.068178502813595],
-        targetLocation: [-106.503961875, 33.051502817366334]
-        },
-      {
-        leaving: "Colorado",
-        to: "Kansas",
-        sourceLocation: [-99.5606025, 41.068178502813595],
-        targetLocation: [-97.27544625, 34.29490081496779]
-    }
-]
-
-var California = [
-      {
-        leaving: "California",
-        to: "Texas",
-        sourceLocation: [-119.355165,35.458606],
-        targetLocation: [-97.388631,30.943149]
-      }
-]
-
-var Washington = [
-      {
-        leaving: "Washington",
-        to: "California",
-        sourceLocation: [-121.624501,47.341728],
-        targetLocation: [-119.355165,35.458606]
-      }
-]
-
 d3.json('states.json', function(error, us) {
 	svg.selectAll('.states')
 		.data(topojson.feature(us, us.objects.usStates).features)
@@ -118,25 +85,9 @@ d3.json('states.json', function(error, us) {
       var incoming = incoming_states[state];
       var curr_state_center = state_centers[state];
       var incoming_state_center = state_centers[incoming];
+      console.log(incoming);
+      console.log(curr_state_center)
       var links = [];
-      /*
-      links.push({
-           type: "LineString",
-           coordinates: [
-               [data_of_state[0]['sourceLocation'][0], data_of_state[0]['sourceLocation'][1]],
-               [data_of_state[0]['targetLocation'][0], data_of_state[0]['targetLocation'][1]]
-           ]
-      });
-      */
-      /*
-      links.push({
-           type: "LineString",
-           coordinates: [
-               [36.116203, -119.681564],
-               [31.054487, -97.563461]
-           ]
-      });
-      */
       links.push({
             type: "LineString",
             coordinates: [
@@ -154,11 +105,49 @@ d3.json('states.json', function(error, us) {
          .append('path')
          .attr('id', state)
          .attr('d', function(d) {
-               return lngLatToArc(d, 0, 1, 15);
+               return drawArrowArcs(d, 0, 1);
          });
     }
 });
 
+function drawArrowArcs(d, sourceName, targetName) {
+      var sourceLngLat = d['coordinates'][sourceName],
+          targetLngLat = d['coordinates'][targetName];
+        var origin = projection(sourceLngLat);
+        var dest = projection(targetLngLat);
+        var mid = [ (origin[0] + dest[0]) / 2, (origin[1] + dest[1]) / 2];
+
+
+        //define handle points for Bezier curves. Higher values for curveoffset will generate more pronounced curves.
+
+        var curveoffset = 20,
+        midcurve = [mid[0]+curveoffset, mid[1]-curveoffset]
+        // the scalar variable is used to scale the curve's derivative into a unit vector
+        scalar = Math.sqrt(Math.pow(dest[0],2) - 2*dest[0]*midcurve[0]+Math.pow(midcurve[0],2)+Math.pow(dest[1],2)-2*dest[1]*midcurve[1]+Math.pow(midcurve[1],2));
+
+
+        // define the arrowpoint: the destination, minus a scaled tangent vector, minus an orthogonal vector scaled to the datum.trade variable
+
+        arrowpoint = [
+          dest[0] - ( 0.5*15*(dest[0]-midcurve[0]) -15*(dest[1]-midcurve[1]) ) / scalar ,
+          dest[1] - ( 0.5*15*(dest[1]-midcurve[1]) - 15*(-dest[0]+midcurve[0]) ) / scalar
+        ];
+
+        // move cursor to origin
+        return "M" + origin[0] + ',' + origin[1]
+        // smooth curve to offset midpoint
+         + "S" + midcurve[0] + "," + midcurve[1]
+        //smooth curve to destination
+         + "," + dest[0] + "," + dest[1]
+        //straight line to arrowhead point
+         + "L" + arrowpoint[0] + "," + arrowpoint[1]
+        // straight line towards original curve along scaled orthogonal vector (creates notched arrow head)
+         + "l" + (0.3*40*(-dest[1]+midcurve[1])/scalar) + "," + (0.3*40*(dest[0]-midcurve[0])/scalar)
+        // smooth curve to midpoint
+         + "S" + (midcurve[0]) + "," + (midcurve[1])
+        //smooth curve to origin
+         + "," + origin[0] + "," + origin[1]
+}
 
 
 function lngLatToArc(d, sourceName, targetName, bend){
