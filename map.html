@@ -92,14 +92,31 @@ d3.json('states.json', function(error, us) {
     .on('mouseout', function(d){
       var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
       var svg_id = "#" + name;
+      var outgoing_id = "." + name + "outgoing";
+      console.log(outgoing_id);
       d3.select(svg_id).remove();
+      d3.select(outgoing_id).remove();
     });
+
     function drawArcs(state) {
       var incoming = incoming_states[state];
       var curr_state_center = state_centers[state];
       var incoming_state_center = state_centers[incoming];
-      console.log(incoming);
-      console.log(curr_state_center)
+      var outgoing = outgoing_states[state];
+      var outgoingcoords = [];
+      if (outgoing != undefined ) {
+        for (var i = 0; i < outgoing.length; i++) {
+          var coord = state_centers[outgoing[i]];
+          outgoingcoords.push({
+          type: "LineString",
+          coordinates: [
+              coord,
+              curr_state_center
+          ]
+          });
+        }
+    }
+
       var links = [];
       links.push({
             type: "LineString",
@@ -120,7 +137,19 @@ d3.json('states.json', function(error, us) {
          .attr('d', function(d) {
                return drawArrowArcs(d, 0, 1);
          });
-    }
+
+   if (outgoing != undefined ) {
+    var classname = "" + state + "outgoing";
+    var outgoingArcs = svg.append("g").attr("class", classname);
+     outgoingArcs.selectAll('.' + classname)
+        .data(outgoingcoords)
+        .enter()
+        .append('path')
+        .attr('d', function(d) {
+              return drawArrowArcs(d, 0, 1);
+        });
+     }
+   }
 });
 
 function drawArrowArcs(d, sourceName, targetName) {
