@@ -95,6 +95,7 @@ d3.json('states.json', function(error, us) {
       d3.select(svg_id).remove();
     });
     function drawArcs(state) {
+      console.log("This is the state: "+ state);
       var incoming = incoming_states[state];
       var curr_state_center = state_centers[state];
       var incoming_state_center = state_centers[incoming];
