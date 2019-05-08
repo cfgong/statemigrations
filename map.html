@@ -26,7 +26,7 @@ h1 {
   fill: none;
 }
 </style>
-<body>
+<body">
 <div id="info"><h1 id="name"></h1></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -53,29 +53,56 @@ d3.csv("/data/cleaned/state_centers.csv", function(data){
   data.forEach(function(d){
     var stateName = d["state"].replace(/\s+/g, '');
     state_centers[stateName] = [+d["longtitude"], +d["latitude"]];
-    //console.log(state_centers);
   });
 });
 
-var incoming_states = {};
-var outgoing_states = {};
-d3.csv("/data/cleaned/state2017.csv", function(data){
-  data.forEach(function(d){
-    var starting_state = d["starting"].replace(/\s+/g, '').toString();
-    console.log(starting_state);
-    var ending_state = d["ending"].replace(/\s+/g, '').toString();
+// the list of years we are looking at
+var dates = []
+for (var i = 2013; i <= 2017; i++){
+  dates.push(i.toString());
+}
 
-    incoming_states[starting_state] = ending_state;
+// year to year data dict
+var incoming_states_all = {};
+var outgoing_states_all = {};
+// function to populate dicts by reading csvs
+function load_in_csv(dateYear){
+  var incoming_states = {};
+  var outgoing_states = {};
+  var dataPath = "/data/cleaned/state"+dateYear+".csv";
+  dataPath = "/data/cleaned/state2016.csv";
+  d3.csv(dataPath, function(data){
+    data.forEach(function(d){
+      var starting_state = d["starting"].replace(/\s+/g, '').toString();
+      var ending_state = d["ending"].replace(/\s+/g, '').toString();
 
-    var outgoing_states_list = outgoing_states[ending_state];
-    if (outgoing_states_list == undefined){
-      outgoing_states[ending_state] = new Array();
-      outgoing_states[ending_state].push([starting_state]);
-    } else {
-      outgoing_states[ending_state].push([starting_state]);
-    }
+      incoming_states[starting_state] = ending_state;
+
+      var outgoing_states_list = outgoing_states[ending_state];
+      if (outgoing_states_list == undefined){
+        outgoing_states[ending_state] = new Array();
+        outgoing_states[ending_state].push([starting_state]);
+      } else {
+        outgoing_states[ending_state].push([starting_state]);
+      }
+      
+    });
   });
-});
+  incoming_states_all[dateYear] = incoming_states;
+  outgoing_states_all[dateYear] = outgoing_states;
+}
+
+// create a range for all the years
+var dates = new Array(); 
+for (var i = 2013; i <= 2017; i++){
+  dates.push(i.toString());
+}
+// load in data for all the years
+for (var i = 0; i < dates.length; i++){
+  load_in_csv(dates[i]);
+}
+// set year
+var currYear = "2015";
 
 d3.json('states.json', function(error, us) {
 	svg.selectAll('.states')
@@ -86,19 +113,19 @@ d3.json('states.json', function(error, us) {
 		.attr('d', path)
 		.on('mouseover', function(d){
 			var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
-      console.log("outgoing states: " + outgoing_states[name]);
 			return drawArcs(name);
 		})
     .on('mouseout', function(d){
       var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
       var svg_id = "#" + name;
       var outgoing_id = "." + name + "outgoing";
-      console.log(outgoing_id);
       d3.select(svg_id).remove();
       d3.select(outgoing_id).remove();
     });
 
     function drawArcs(state) {
+      var outgoing_states = outgoing_states_all[currYear];
+      var incoming_states = incoming_states_all[currYear];
       console.log("This is the state: "+ state);
       var incoming = incoming_states[state];
       var curr_state_center = state_centers[state];
