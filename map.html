@@ -7,9 +7,9 @@ h1 {
   color:#333;
 }
 #info {
-  position:absolute;
+  /*position:absolute;
   top: 10px;
-  left: 10px;
+  left: 10px;*/
 }
 .states {
 	fill: #e5e5e5;
@@ -17,24 +17,31 @@ h1 {
 	stroke-width:2px;
 }
 .states:hover {
-	fill: steelblue;
-}
-.arcs {
-  stroke-width: 2px;
-  stroke: tomato;
-  pointer-events: none;
-  fill: none;
+	fill: #cccccc;
 }
 form {
-  float: right;
+  display: inline-block;
+  position: absolute;
+  margin: 0;
 }
+#map {
+    display: inline-block;
+}
+body {
+  text-align: center;
+}
+
 </style>
 <body>
 <div id="info">
   <h1 id="title"></h1>
 </div>
+<div id = "middlepage">
+<div id = "map">
+</div>
 <!-- form radio buttons created with javascript-->
 <form id = "yearForm"></form>
+</div>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -64,7 +71,7 @@ form {
         } else {
           outgoing_states[ending_state].push([starting_state]);
         }
-        
+
       });
     });
     incoming_states_all[dateYear] = incoming_states;
@@ -112,7 +119,7 @@ form {
   var width = 960,
     height = 500;
 
-  var svg = d3.select('body').append('svg')
+  var svg = d3.select('#map').append('svg')
     .attr('width', width)
     .attr('height', height);
 
@@ -192,7 +199,12 @@ form {
       .attr('id', state)
       .attr('d', function(d) {
         return drawArrowArcs(d, 0, 1);
-      });
+      })
+      .style('fill', '#ff3333')
+      .style({
+      stroke: '#ff3333',
+      'stroke-width': '1px'
+      })
 
     if (outgoing != undefined ) {
       var classname = "" + state + "outgoing";
@@ -203,7 +215,12 @@ form {
         .append('path')
         .attr('d', function(d) {
           return drawArrowArcs(d, 0, 1);
-        });
+        })
+        .style('fill', '#1a53ff')
+        .style({
+        stroke: '#1a53ff',
+        'stroke-width': '1px'
+        })
       }
     }
   });

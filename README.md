@@ -4,11 +4,15 @@
 - [List of Laitudes and Longitudes for every State](https://inkplant.com/code/state-latitudes-longitudes)
 
 ### Status
+Ashu:
+Status:
+- changed the coloring of the arcs
+
 To do (Ashu):   
 - see if there are better arcs
-- color based on whether its outgoing or incoming
 - vary the bends of the arcs   
-
+- Add a legend/description for the arcs
+- also work on css
 
 Crystal:   
 Status:  
