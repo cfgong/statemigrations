@@ -26,27 +26,16 @@ h1 {
   fill: none;
 }
 </style>
-<body">
+<body>
 <div id="info"><h1 id="name"></h1></div>
-<!--try creating elements using javascript instead-->
-<form>
-  <input type="radio" id="2013" name = "year" onclick ="setYear(this.id)"> 2013
-  <input type="radio" id="2014" name = "year" onclick ="setYear(this.id)"> 2014
-  <input type="radio" id="2015" name = "year" onclick ="setYear(this.id)"> 2015
-  <input type="radio" id="2016" name = "year" onclick ="setYear(this.id)"> 2016
-</form>
+<!-- form radio buttons created with javascript-->
+<form id = "yearForm"></form>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <script>
   const FIRST_YEAR = 2013;
   const LAST_YEAR = 2017;
-  // set year
-  var currYear = FIRST_YEAR.toString();
-  function setYear(yearDate){
-    console.log(yearDate);
-    currYear = yearDate;
-  }
 
   // year to year data dict
   var incoming_states_all = {};
@@ -56,7 +45,6 @@ h1 {
     var incoming_states = {};
     var outgoing_states = {};
     var dataPath = "/data/cleaned/state"+dateYear+".csv";
-    dataPath = "/data/cleaned/state2016.csv";
     d3.csv(dataPath, function(data){
       data.forEach(function(d){
         var starting_state = d["starting"].replace(/\s+/g, '').toString();
@@ -77,16 +65,39 @@ h1 {
     incoming_states_all[dateYear] = incoming_states;
     outgoing_states_all[dateYear] = outgoing_states;
   }
+  // function to create radio buttons
+  function createRadioYearButton(year, checked) {
+    // <input type="radio" id="2013" name = "year" onclick ="setYear(this.id)"> 2013
+    var radioHtml = '<input type="radio" id = "'+ year +'" name="year" onclick = "setYear(this.id)"';
+    if (checked) {
+        radioHtml += ' checked="checked"';
+    }
+    radioHtml += '/> ' + year;
 
-  // create a range for all the years
-  var dates = new Array(); 
-  for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
-    dates.push(i.toString());
+    var radioButton = document.createElement('div');
+    radioButton.innerHTML = radioHtml;
+
+    return radioButton;
   }
   // load in data for all the years
-  for (var i = 0; i < dates.length; i++){
-    load_in_csv(dates[i]);
+  // and subsequently add radio buttons to form
+  for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
+    load_in_csv(i.toString());
+    var checkedBool = false;
+    if (i == FIRST_YEAR){
+      checkedBool = true;
+    }
+    document.getElementById("yearForm").appendChild(createRadioYearButton(i, checkedBool));
   }
+  // set default year
+  var currYear = FIRST_YEAR.toString();
+
+  // function for radio buttons
+  function setYear(yearDate){
+    console.log(yearDate);
+    currYear = yearDate;
+  }
+
   // for the map drawing and arc graphing
   var width = 960,
     height = 500;
