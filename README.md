@@ -17,3 +17,6 @@ Status:
 To do:   
 - boostraps the whole thing to make it look nice
 - import data from all years
+- maybe not use radio buttons and use incrementer buttons instead? or slider?
+- add functionality for clicking on a state and locking???
+- css css css
