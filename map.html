@@ -51,17 +51,29 @@ var state_centers = {};
 
 d3.csv("/data/cleaned/state_centers.csv", function(data){
   data.forEach(function(d){
-    console.log(d["state"].replace(/\s+/g, ''));
-    state_centers[d["state"].replace(/\s+/g, '')] = [+d["longtitude"], +d["latitude"]];
-    console.log(state_centers);
+    var stateName = d["state"].replace(/\s+/g, '');
+    state_centers[stateName] = [+d["longtitude"], +d["latitude"]];
+    //console.log(state_centers);
   });
 });
 
 var incoming_states = {};
+var outgoing_states = {};
 d3.csv("/data/cleaned/state2017.csv", function(data){
   data.forEach(function(d){
-    console.log(d["starting"].replace(/\s+/g, ''));
-    incoming_states[d["starting"].replace(/\s+/g, '')] = d["ending"].replace(/\s+/g, '');
+    var starting_state = d["starting"].replace(/\s+/g, '').toString();
+    console.log(starting_state);
+    var ending_state = d["ending"].replace(/\s+/g, '').toString();
+
+    incoming_states[starting_state] = ending_state;
+
+    var outgoing_states_list = outgoing_states[ending_state];
+    if (outgoing_states_list == undefined){
+      outgoing_states[ending_state] = new Array();
+      outgoing_states[ending_state].push([starting_state]);
+    } else {
+      outgoing_states[ending_state].push([starting_state]);
+    }
   });
 });
 
@@ -107,6 +119,7 @@ d3.json('states.json', function(error, us) {
 		.attr('d', path)
 		.on('mouseover', function(d){
 			var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
+      console.log("outgoing states: " + outgoing_states[name]);
 			return drawArcs(name);
 		})
     .on('mouseout', function(d){
