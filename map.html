@@ -50,6 +50,9 @@ body {
 }
 
 </style>
+<head>
+  <title> State Migrations </title>
+</head>
 <body>
 <div id="info">
   <h1 id="title"></h1>
@@ -59,9 +62,10 @@ body {
 </div>
 <div id = "map">
 </div>
+
+</div>
 <!-- form radio buttons created with javascript-->
 <form id = "yearForm"></form>
-</div>
 <div id= "legend">
   <div style = "font-size: 30px; font-family: arial;"><b> Legend</b> </div>
   <hr/ style = "width: 50%">
@@ -109,6 +113,7 @@ left selected state in the given year moved to state B
     incoming_states_all[dateYear] = incoming_states;
     outgoing_states_all[dateYear] = outgoing_states;
   }
+  /**
   // function to create radio buttons
   function createRadioYearButton(year, checked) {
     // <input type="radio" id="2013" name = "year" onclick ="setYear(this.id)"> 2013
@@ -149,6 +154,10 @@ left selected state in the given year moved to state B
       return drawArcs(currentState);
     }
   }
+  **/
+  // create slider range thing
+  document.getElementById("yearForm").innerHTML = '<input type = "range" name = "points" min = "' 
+  + FIRST_YEAR + '" max = "' + LAST_YEAR + '">';
 
   // for the map drawing and arc graphing
   var width = 960,
@@ -185,8 +194,9 @@ left selected state in the given year moved to state B
       .on('mouseover', function(d){
         if (!isClicked) {
           d3.select(this).style("fill", "#cccccc");
-          var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
+          var name = d.properties.STATE_ABBR;
           var toDisplay = "You are hovering over " + name + "";
+          name = name.replace(/\s+/g, '');
           document.getElementById("dialoguebox").innerHTML = toDisplay;
           return drawArcs(name);
         }
@@ -204,7 +214,7 @@ left selected state in the given year moved to state B
         }
       })
       .on('click', function(d){
-        var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
+        var name = d.properties.STATE_ABBR;
         if (currentState == "") {
           isClicked = true;
           currentStateDataObject = this;
@@ -212,6 +222,7 @@ left selected state in the given year moved to state B
           d3.select(this).style("fill", "steelblue");
           var toDisplay = "Unclick " + currentState +
           " to stop hold feature or click on another state to enable hold feature for that state";
+          name = name.replace(/\s+/g, '');
           document.getElementById("dialoguebox").innerHTML = toDisplay;
           return drawArcs(name);
         }
