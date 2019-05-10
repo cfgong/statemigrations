@@ -6,13 +6,12 @@
 ### Status
 Ashu:
 Status:
-- changed the coloring of the arcs
+- added legend and feature to see which state is being selected
 
 To do (Ashu):   
 - see if there are better arcs
 - vary the bends of the arcs   
-- Add a legend/description for the arcs
-- also work on css
+- add description at the top on how to interact with graph for users
 
 Crystal:   
 Status:  
