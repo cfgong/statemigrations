@@ -2,7 +2,6 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <style>
 h1 {
-  font-family:arial;
   font-size:2em;
   color:#333;
 }
@@ -16,19 +15,38 @@ h1 {
 	stroke: #fff;
 	stroke-width:2px;
 }
-.states:hover {
-	fill: #cccccc;
-}
 form {
   display: inline-block;
   position: absolute;
   margin: 0;
+}
+#dialoguebox {
+  display: inline-block;
+  position: absolute;
+  margin: 0;
+  width: 200px;
+  margin-left: -150px;
+  top: 50%;
+  margin-top: -150px;
+  font-size: 20px;
+
 }
 #map {
     display: inline-block;
 }
 body {
   text-align: center;
+  font-family:arial;
+}
+#legend
+{
+  padding-top: 20px;
+  width: 50%;
+  margin: 0 auto;
+  font-size: 20px;
+}
+#legendtext {
+  text-align: left;
 }
 
 </style>
@@ -37,18 +55,32 @@ body {
   <h1 id="title"></h1>
 </div>
 <div id = "middlepage">
+<div id = "dialoguebox">
+</div>
 <div id = "map">
 </div>
 <!-- form radio buttons created with javascript-->
 <form id = "yearForm"></form>
 </div>
-
+<div id= "legend">
+  <div style = "font-size: 30px; font-family: arial;"><b> Legend</b> </div>
+  <hr/ style = "width: 50%">
+  <div id = "legendtext">
+<span style= "color: blue"> STATE A &#8594; SELECTED STATE (hover or click)</span>: Largest proportion of those who
+left state A in the given year moved to selected state <br/>
+<br/>
+<span style = "color: red"> SELECTED STATE (hover or click) &#8594; STATE B</span>: Largest proportion of those who
+left selected state in the given year moved to state B
+</div>
+</div>
+</body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <script>
   const FIRST_YEAR = 2005;
   const LAST_YEAR = 2017;
-
+  var currentState = "";
+  var currentStateDataObject;
   // year to year data dict
   var incoming_states_all = {};
   var outgoing_states_all = {};
@@ -113,6 +145,9 @@ body {
     console.log(yearDate);
     currYear = yearDate; // set new current year
     setTitle(yearDate);
+    if (currentState != ""){
+      return drawArcs(currentState);
+    }
   }
 
   // for the map drawing and arc graphing
@@ -140,6 +175,7 @@ body {
   });
 
   d3.json('states.json', function(error, us) {
+    var isClicked = false;
     svg.selectAll('.states')
       .data(topojson.feature(us, us.objects.usStates).features)
       .enter()
@@ -147,21 +183,88 @@ body {
       .attr('class', 'states')
       .attr('d', path)
       .on('mouseover', function(d){
-        var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
-        return drawArcs(name);
+        if (!isClicked) {
+          d3.select(this).style("fill", "#cccccc");
+          var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
+          var toDisplay = "You are hovering over " + name + "";
+          document.getElementById("dialoguebox").innerHTML = toDisplay;
+          return drawArcs(name);
+        }
+
       })
       .on('mouseout', function(d){
+        if (!isClicked) {
+          d3.select(this).style("fill", "#e5e5e5");
+          var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
+          var svg_id = "#" + name;
+          var outgoing_id = "." + name + "outgoing";
+          d3.select(svg_id).remove();
+          d3.select(outgoing_id).remove();
+          document.getElementById("dialoguebox").innerHTML = "";
+        }
+      })
+      .on('click', function(d){
         var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
-        var svg_id = "#" + name;
-        var outgoing_id = "." + name + "outgoing";
-        d3.select(svg_id).remove();
-        d3.select(outgoing_id).remove();
-      });
+        if (currentState == "") {
+          isClicked = true;
+          currentStateDataObject = this;
+          currentState = name;
+          d3.select(this).style("fill", "steelblue");
+          var toDisplay = "Unclick " + currentState +
+          " to stop hold feature or click on another state to enable hold feature for that state";
+          document.getElementById("dialoguebox").innerHTML = toDisplay;
+          return drawArcs(name);
+        }
+        else if (currentState != name) {
+          isClicked = true;
+          var potential_ad = "#" + currentState;
+          if (d3.select(potential_ad)[0][0] != null) {
+            d3.select(potential_ad).remove();
+          }
+          var potential_id2 = "." + currentState + "outgoing";
+          if (d3.select(potential_id2)[0][0] != null) {
+            d3.select(potential_id2).remove();
+          }
+          d3.select(currentStateDataObject).style("fill", "#e5e5e5");
+          d3.select(currentStateDataObject).style("hover", "#cccccc");
+          d3.select(this).style("fill", "steelblue");
+          currentState = name;
+          currentStateDataObject = this;
+          var toDisplay = "Unclick " +  currentState +
+          " to stop hold feature or click on another state to enable hold feature for that state";
+          document.getElementById("dialoguebox").innerHTML = toDisplay;
+          return drawArcs(name);
+        }
+        else {
+          isClicked = false;
+          var potential_ad = "#" + currentState;
+          if (d3.select(potential_ad)[0][0] != null) {
+            d3.select(potential_ad).remove();
+          }
+          var potential_id2 = "." + currentState + "outgoing";
+          if (d3.select(potential_id2)[0][0] != null) {
+            d3.select(potential_id2).remove();
+          }
+          d3.select(currentStateDataObject).style("fill", "#e5e5e5");
+          d3.select(currentStateDataObject).style("hover", "#cccccc");
+          currentStateDataObject = null;
+          currentState = "";
+          document.getElementById("dialoguebox").innerHTML = "";
+        }
+      })
+});
 
   function drawArcs(state) {
+    var potential_ad = "#" + state;
+    if (d3.select(potential_ad)[0][0] != null) {
+      d3.select(potential_ad).remove();
+    }
+    var potential_id2 = "." + state + "outgoing";
+    if (d3.select(potential_id2)[0][0] != null) {
+      d3.select(potential_id2).remove();
+    }
     var outgoing_states = outgoing_states_all[currYear];
     var incoming_states = incoming_states_all[currYear];
-    console.log("This is the state: "+ state + " in year " + currYear);
     var incoming = incoming_states[state];
     var curr_state_center = state_centers[state];
     var incoming_state_center = state_centers[incoming];
@@ -223,7 +326,6 @@ body {
         })
       }
     }
-  });
 
   function drawArrowArcs(d, sourceName, targetName) {
     var sourceLngLat = d['coordinates'][sourceName],
@@ -301,5 +403,4 @@ body {
   }
 
 </script>
-</body>
 </html>
