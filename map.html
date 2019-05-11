@@ -54,29 +54,28 @@ body {
   <title> State Migrations </title>
 </head>
 <body>
-<div id="info">
-  <h1 id="title"></h1>
-</div>
-<div id = "middlepage">
-<div id = "dialoguebox">
-</div>
-<div id = "map">
-</div>
-
-</div>
-<!-- form radio buttons created with javascript-->
-<form id = "yearForm"></form>
-<div id= "legend">
-  <div style = "font-size: 30px; font-family: arial;"><b> Legend</b> </div>
-  <hr/ style = "width: 50%">
-  <div id = "legendtext">
-<span style= "color: blue"> STATE A &#8594; SELECTED STATE (hover or click)</span>: Largest proportion of those who
-left state A in the given year moved to selected state <br/>
-<br/>
-<span style = "color: red"> SELECTED STATE (hover or click) &#8594; STATE B</span>: Largest proportion of those who
-left selected state in the given year moved to state B
-</div>
-</div>
+  <div id="info">
+    <h1 id="title"></h1>
+  </div>
+  <div id = "middlepage">
+    <div id = "dialoguebox"></div>
+    <div id = "map"></div>
+  </div>
+  <div id = "yearForm"></div>
+  <div id= "legend">
+    <div style = "font-size: 30px; font-family: arial;">
+      <b>Legend</b> 
+    </div>
+    <hr style = "width: 50%">
+    <div id = "legendtext">
+      <span style= "color: blue"> STATE A &#8594; SELECTED STATE (hover or click)</span>: Largest proportion of those who
+      left state A in the given year moved to selected state 
+      <br/>
+      <br/>
+      <span style = "color: red"> SELECTED STATE (hover or click) &#8594; STATE B</span>: Largest proportion of those who
+      left selected state in the given year moved to state B
+    </div>
+  </div>
 </body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -128,6 +127,7 @@ left selected state in the given year moved to state B
 
     return radioButton;
   }
+  **/
   // load in data for all the years
   // and subsequently add radio buttons to form
   for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
@@ -136,17 +136,22 @@ left selected state in the given year moved to state B
     if (i == FIRST_YEAR){
       checkedBool = true;
     }
-    document.getElementById("yearForm").appendChild(createRadioYearButton(i, checkedBool));
   }
   function setTitle(yearDate){
     document.getElementById("title").innerHTML = "State migrations in year " + yearDate; // change title
   }
+
+  // create slider range thing
+  document.getElementById("yearForm").innerHTML = '<input id = "slider" type = "range" min = "' 
+  + FIRST_YEAR + '" max = "' + LAST_YEAR + '" oninput = "setYear()">';
+
   // set default year
   var currYear = FIRST_YEAR.toString();
   setTitle(currYear);
 
-  // function for radio buttons
-  function setYear(yearDate){
+  // function for slider
+  function setYear(){
+    var yearDate = document.getElementById("slider").value;
     console.log(yearDate);
     currYear = yearDate; // set new current year
     setTitle(yearDate);
@@ -154,10 +159,6 @@ left selected state in the given year moved to state B
       return drawArcs(currentState);
     }
   }
-  **/
-  // create slider range thing
-  document.getElementById("yearForm").innerHTML = '<input type = "range" name = "points" min = "' 
-  + FIRST_YEAR + '" max = "' + LAST_YEAR + '">';
 
   // for the map drawing and arc graphing
   var width = 960,
