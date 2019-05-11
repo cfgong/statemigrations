@@ -9,17 +9,17 @@ Status:
 - added legend and feature to see which state is being selected
 
 To do (Ashu):   
-- see if there are better arcs
-- vary the bends of the arcs   
-- add description at the top on how to interact with graph for users
+
 
 Crystal:   
 Status:  
-- Implemented Radio buttons for different years   
+- working on styling
 
-To do:   
+To do (Crystal):   
 - boostraps the whole thing to make it look nice
-- import data from all years
-- maybe not use radio buttons and use incrementer buttons instead? or slider?
-- add functionality for clicking on a state and locking???
-- css css css
+
+Bugs:
+- buggy onhold feature for two word states
+
+Resources
+- [Stack Overflow: retrieve slider range value](https://stackoverflow.com/questions/29103818/how-can-i-retrieve-and-display-slider-range-value)

@@ -1,47 +1,98 @@
-h1 {
-  font-size:2em;
-  color:#333;
-}
-#info {
-  /*position:absolute;
-  top: 10px;
-  left: 10px;*/
+:root {
+    --slider-thumb-color: purple;
+    --background-color: #e5e5e5;
 }
 .states {
-	fill: #e5e5e5;
-	stroke: #fff;
-	stroke-width:2px;
+    fill: var(--background-color);
+    stroke: white;
+    stroke-width:2px;
 }
-form {
-  display: inline-block;
-  position: absolute;
-  margin: 0;
-}
-#dialoguebox {
-  display: inline-block;
-  position: absolute;
-  margin: 0;
-  width: 200px;
-  margin-left: -150px;
-  top: 50%;
-  margin-top: -150px;
-  font-size: 20px;
 
-}
+/** background colors, for testing **/
+/**
 #map {
-    display: inline-block;
+    background-color: orange;
 }
-body {
-  text-align: center;
-  font-family:arial;
+
+#legend {
+    background-color: aqua;
 }
-#legend
-{
-  padding-top: 20px;
-  width: 50%;
-  margin: 0 auto;
-  font-size: 20px;
+**/
+/** actual css **/
+
+#map {
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
-#legendtext {
-  text-align: left;
+
+.states {
+    cursor: pointer;
+}
+
+
+h1 { }
+
+
+#dialoguebox {
+    display: flex;
+    position: absolute;
+    margin: 0;
+    width: 300px;
+    /**
+    margin-left: 150px;
+    top: 50%;
+    margin-top: 150px;
+    font-size: 20px;
+    **/
+}
+
+/** slider styling **/
+
+#slider {
+  -webkit-appearance: none;
+  height: 15px;
+  border-radius: 5px;
+  background: var(--background-color);
+  outline: none;
+  cursor: pointer;
+}
+
+#legend {}
+
+#yearslider{
+    width: 100%;
+}
+
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--slider-thumb-color);
+    cursor: pointer;
+  }
+
+#slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--slider-thumb-color);
+    cursor: pointer;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+datalist {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0px;
+    text-align: center;
+    /**
+    cursor: context-menu;
+    **/
 }

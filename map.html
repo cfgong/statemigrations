@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<style>
 
-</style>
 <head>
   <title> State Migrations </title>
   <!-- import css -->
@@ -12,23 +10,25 @@
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="http://d3js.org/topojson.v1.min.js"></script>
 </head>
+
 <body>
   <h1 id="title"></h1>
-  <div id = "middlepage">
+  <div id = "middlepage"></div>
     <div id = "dialoguebox"></div>
     <div id = "map"></div>
-  </div>
-  <div id = "yearslider"></div>
-  <div id= "legend">
-    <div id = "legendtext">
-      <span style= "color: blue"> STATE A &#8594; SELECTED STATE (hover or click)</span>: Largest proportion of those who
+    <div id = "legend">
+      <div id = "yearslider"></div>
+      <p>
+        <span style= "color: blue"> STATE A &#8594; SELECTED STATE (hover or click)</span>: Largest proportion of those who
       left state A in the given year moved to selected state 
-      <br/>
-      <br/>
-      <span style = "color: red"> SELECTED STATE (hover or click) &#8594; STATE B</span>: Largest proportion of those who
+      </p>
+      <p>
+        <span style = "color: red"> SELECTED STATE (hover or click) &#8594; STATE B</span>: Largest proportion of those who
       left selected state in the given year moved to state B
+      </p>
     </div>
   </div>
   <script src="map.js"></script>
 </body>
+
 </html>

@@ -40,15 +40,20 @@ for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
     }
 }
 function setTitle(yearDate){
-    document.getElementById("title").innerHTML = "State migrations in year " + yearDate; // change title
+    document.getElementById("title").innerHTML = "State Migrations in " + yearDate; // change title
 }
 
 // create slider range thing
-document.getElementById("yearslider").innerHTML = '<input id = "slider" type = "range" min = "' 
-+ FIRST_YEAR + '" max = "' + LAST_YEAR + '" oninput = "setYear()">';
-
+document.getElementById("yearslider").innerHTML += '<input id = "slider" type = "range" min = "' 
++ FIRST_YEAR + '" max = "' + LAST_YEAR + '" oninput = "setYear()" list = "steplist">';
+// add labels
+document.getElementById("yearslider").innerHTML += '<datalist id = "steplist"></datalist>';
+for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
+    document.getElementById("steplist").innerHTML += '<option>' + i +'</option>';
+}
 // set default year
 var currYear = FIRST_YEAR.toString();
+document.getElementById("slider").defaultValue = currYear;
 setTitle(currYear);
 
 // function for slider
@@ -86,7 +91,7 @@ data.forEach(function(d){
 });
 });
 
-d3.json('states.json', function(error, us) {
+d3.json('/data/state/states.json', function(error, us) {
 var isClicked = false;
 svg.selectAll('.states')
     .data(topojson.feature(us, us.objects.usStates).features)
@@ -123,8 +128,8 @@ svg.selectAll('.states')
         currentStateDataObject = this;
         currentState = name;
         d3.select(this).style("fill", "steelblue");
-        var toDisplay = "Unclick " + currentState +
-        " to stop hold feature or click on another state to enable hold feature for that state";
+        var toDisplay = "Click on " + currentState +
+        " again or another state to toggle hold feature.";
         name = name.replace(/\s+/g, '');
         document.getElementById("dialoguebox").innerHTML = toDisplay;
         return drawArcs(name);
@@ -144,8 +149,8 @@ svg.selectAll('.states')
         d3.select(this).style("fill", "steelblue");
         currentState = name;
         currentStateDataObject = this;
-        var toDisplay = "Unclick " +  currentState +
-        " to stop hold feature or click on another state to enable hold feature for that state";
+        var toDisplay = "Click on " +  currentState +
+        " again or another state to toggle hold feature.";
         document.getElementById("dialoguebox").innerHTML = toDisplay;
         return drawArcs(name);
     }
