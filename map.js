@@ -1,5 +1,7 @@
 const FIRST_YEAR = 2005;
 const LAST_YEAR = 2017;
+const DIAGLOGUE_DEFAULT = "Hover over or select a state.";
+// const LEGEND_DEFAULT = '<div> <span style= "color: blue"> STATE A &#8594; SELECTED STATE </span>: Largest proportion of those who left state A in the given year moved to selected state </div><div><span style = "color: red"> SELECTED STATE &#8594; STATE B</span>: Largest proportion of those who left selected state in the given year moved to state B</div>';
 var currentState = "";
 var currentStateDataObject;
 // year to year data dict
@@ -31,7 +33,6 @@ function load_in_csv(dateYear){
     outgoing_states_all[dateYear] = outgoing_states;
 }
 // load in data for all the years
-// and subsequently add radio buttons to form
 for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
     load_in_csv(i.toString());
     var checkedBool = false;
@@ -40,7 +41,7 @@ for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
     }
 }
 function setTitle(yearDate){
-    document.getElementById("title").innerHTML = "State Migrations in " + yearDate; // change title
+    document.getElementById("title").innerHTML = "Popular State Migrations in " + yearDate; // change title
 }
 
 // create slider range thing
@@ -66,6 +67,10 @@ function setYear(){
         return drawArcs(currentState);
     }
 }
+// set dialogue message box default
+document.getElementById("dialoguebox").innerHTML = DIAGLOGUE_DEFAULT;
+// set legend message default
+document.getElementById("legend").innerHTML = generateLegendMessage("STATE", "N/A", "N/A", currYear);
 
 // for the map drawing and arc graphing
 var width = 960,
@@ -85,10 +90,10 @@ var path = d3.geo.path()
 var state_centers = {};
 
 d3.csv("/data/cleaned/state_centers.csv", function(data){
-data.forEach(function(d){
-    var stateName = d["state"].replace(/\s+/g, '');
-    state_centers[stateName] = [+d["longtitude"], +d["latitude"]];
-});
+    data.forEach(function(d){
+        var stateName = d["state"].replace(/\s+/g, '');
+        state_centers[stateName] = [+d["longtitude"], +d["latitude"]];
+    });
 });
 
 d3.json('/data/state/states.json', function(error, us) {
@@ -100,78 +105,118 @@ svg.selectAll('.states')
     .attr('class', 'states')
     .attr('d', path)
     .on('mouseover', function(d){
-    if (!isClicked) {
-        d3.select(this).style("fill", "#cccccc");
-        var name = d.properties.STATE_ABBR;
-        var toDisplay = "You are hovering over " + name + "";
-        name = name.replace(/\s+/g, '');
-        document.getElementById("dialoguebox").innerHTML = toDisplay;
-        return drawArcs(name);
-    }
-
+        if (!isClicked) {
+            d3.select(this).style("fill", "#cccccc");
+            var name = d.properties.STATE_ABBR;
+            var toDisplay = "You are hovering over " + name + ".";
+            name = name.replace(/\s+/g, '');
+            document.getElementById("dialoguebox").innerHTML = toDisplay;
+            return drawArcs(name);
+        }
     })
-    .on('mouseout', function(d){
-    if (!isClicked) {
-        d3.select(this).style("fill", "#e5e5e5");
-        var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
-        var svg_id = "#" + name;
-        var outgoing_id = "." + name + "outgoing";
-        d3.select(svg_id).remove();
-        d3.select(outgoing_id).remove();
-        document.getElementById("dialoguebox").innerHTML = "";
-    }
+    .on('mouseleave', function(d){
+        if (!isClicked) {
+            d3.select(this).style("fill", "#e5e5e5");
+            var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
+            var svg_id = "#" + name;
+            var outgoing_id = "." + name + "outgoing";
+            d3.select(svg_id).remove();
+            d3.select(outgoing_id).remove();
+            document.getElementById("dialoguebox").innerHTML = DIAGLOGUE_DEFAULT;
+            document.getElementById("legend").innerHTML = generateLegendMessage("STATE", "N/A", "N/A", currYear);
+        }
     })
     .on('click', function(d){
-    var name = d.properties.STATE_ABBR;
-    if (currentState == "") {
-        isClicked = true;
-        currentStateDataObject = this;
-        currentState = name;
-        d3.select(this).style("fill", "steelblue");
-        var toDisplay = "Click on " + currentState +
-        " again or another state to toggle hold feature.";
-        name = name.replace(/\s+/g, '');
-        document.getElementById("dialoguebox").innerHTML = toDisplay;
-        return drawArcs(name);
-    }
-    else if (currentState != name) {
-        isClicked = true;
-        var potential_ad = "#" + currentState;
-        if (d3.select(potential_ad)[0][0] != null) {
-        d3.select(potential_ad).remove();
+        function getClickDisplayMessage(currentState){
+            return "Click on " +  currentState +
+            " again or click on another state to toggle hold feature. Also, try changing the year with the slider.";
         }
-        var potential_id2 = "." + currentState + "outgoing";
-        if (d3.select(potential_id2)[0][0] != null) {
-        d3.select(potential_id2).remove();
+        var name = d.properties.STATE_ABBR;
+        if (currentState == "") {
+            isClicked = true;
+            currentStateDataObject = this;
+            currentState = name;
+            d3.select(this).style("fill", "steelblue");
+            var toDisplay = getClickDisplayMessage(currentState);
+            name = name.replace(/\s+/g, '');
+            document.getElementById("dialoguebox").innerHTML = toDisplay;
+            return drawArcs(name);
         }
-        d3.select(currentStateDataObject).style("fill", "#e5e5e5");
-        d3.select(currentStateDataObject).style("hover", "#cccccc");
-        d3.select(this).style("fill", "steelblue");
-        currentState = name;
-        currentStateDataObject = this;
-        var toDisplay = "Click on " +  currentState +
-        " again or another state to toggle hold feature.";
-        document.getElementById("dialoguebox").innerHTML = toDisplay;
-        return drawArcs(name);
-    }
-    else {
-        isClicked = false;
-        var potential_ad = "#" + currentState;
-        if (d3.select(potential_ad)[0][0] != null) {
-        d3.select(potential_ad).remove();
+        else if (currentState != name) {
+            isClicked = true;
+            var potential_ad = "#" + currentState;
+            if (d3.select(potential_ad)[0][0] != null) {
+                d3.select(potential_ad).remove();
+            }
+            var potential_id2 = "." + currentState + "outgoing";
+            if (d3.select(potential_id2)[0][0] != null) {
+                d3.select(potential_id2).remove();
+            }
+            d3.select(currentStateDataObject).style("fill", "#e5e5e5");
+            d3.select(currentStateDataObject).style("hover", "#cccccc");
+            d3.select(this).style("fill", "steelblue");
+            currentState = name;
+            console.log("test:" + currentState);
+            currentStateDataObject = this;
+            var toDisplay = getClickDisplayMessage(currentState);
+            document.getElementById("dialoguebox").innerHTML = toDisplay;
+            return drawArcs(name);
         }
-        var potential_id2 = "." + currentState + "outgoing";
-        if (d3.select(potential_id2)[0][0] != null) {
-        d3.select(potential_id2).remove();
+        else {
+            isClicked = false;
+            var potential_ad = "#" + currentState;
+            if (d3.select(potential_ad)[0][0] != null) {
+                d3.select(potential_ad).remove();
+            }
+            var potential_id2 = "." + currentState + "outgoing";
+            if (d3.select(potential_id2)[0][0] != null) {
+                d3.select(potential_id2).remove();
+            }
+            d3.select(currentStateDataObject).style("fill", "#e5e5e5");
+            d3.select(currentStateDataObject).style("hover", "#cccccc");
+            currentStateDataObject = null;
+            currentState = "";
+            document.getElementById("dialoguebox").innerHTML = DIAGLOGUE_DEFAULT;
         }
-        d3.select(currentStateDataObject).style("fill", "#e5e5e5");
-        d3.select(currentStateDataObject).style("hover", "#cccccc");
-        currentStateDataObject = null;
-        currentState = "";
-        document.getElementById("dialoguebox").innerHTML = "";
-    }
     })
 });
+
+function generateLegendMessage(currentState, incoming, outgoing, year){
+    function splitDoubleWords(word){
+        console.log(word);
+        return word.replace(/([a-z])([A-Z])/g, '$1 $2');
+    }
+    currentState = splitDoubleWords(currentState);
+    incoming = splitDoubleWords(incoming);
+    var message = "";
+    message += "<div>"
+    + "<span style = 'color: red'> "+ currentState +" (selected) &#8594; outgoing state</span>: "
+    + "In " + year + ", the most popular state to move to from " + currentState + " (selected) was " + incoming + "." 
+    + "</div>";
+    if (outgoing != undefined){
+        message += "<div>" 
+        + "<span style= 'color: blue'> Incoming state(s) &#8594; "+ currentState +" (selected)</span>: "
+        + "In " + year + ", " + currentState + " (selected) was the most popular state to move to from the state(s): ";
+
+        if (typeof(outgoing) == "object"){
+            var outgoingStateCount = outgoing.length;
+            for (var i = 0; i < outgoingStateCount; i++){
+                message += splitDoubleWords(outgoing[i].toString()); 
+                if (i != outgoingStateCount - 1){
+                    message += ", ";
+                }
+            }
+        } else {
+            message += outgoing;
+        }
+        
+        message += "." 
+        + "</div>";
+    } else {
+        message += "<div>In "+ year + ", " + currentState + " (selected) was the most popular state to move to from no other states. </div>"
+    }
+    return message;
+}
 
 function drawArcs(state) {
     var potential_ad = "#" + state;
@@ -189,16 +234,17 @@ function drawArcs(state) {
     var incoming_state_center = state_centers[incoming];
     var outgoing = outgoing_states[state];
     var outgoingcoords = [];
-    if (outgoing != undefined ) {
+    document.getElementById("legend").innerHTML = generateLegendMessage(state, incoming, outgoing, currYear);
+    if (outgoing != undefined) {
         for (var i = 0; i < outgoing.length; i++) {
-        var coord = state_centers[outgoing[i]];
-        outgoingcoords.push({
-        type: "LineString",
-        coordinates: [
-            coord,
-            curr_state_center
-        ]
-        });
+            var coord = state_centers[outgoing[i]];
+            outgoingcoords.push({
+                type: "LineString",
+                coordinates: [
+                    coord,
+                    curr_state_center
+                ]
+            });
         }
     }
 
@@ -206,8 +252,8 @@ function drawArcs(state) {
     links.push({
         type: "LineString",
         coordinates: [
-        curr_state_center,
-        incoming_state_center
+            curr_state_center,
+            incoming_state_center
         ]
     });
     //console.log(state + " has incoming state " + incoming + " from " + incoming_state_center + " to " + curr_state_center);
@@ -220,12 +266,12 @@ function drawArcs(state) {
         .append('path')
         .attr('id', state)
         .attr('d', function(d) {
-        return drawArrowArcs(d, 0, 1);
+            return drawArrowArcs(d, 0, 1);
         })
         .style('fill', '#ff3333')
         .style({
-        stroke: '#ff3333',
-        'stroke-width': '1px'
+            'stroke': '#ff3333',
+            'stroke-width': '1px'
         })
 
     if (outgoing != undefined ) {
@@ -240,8 +286,8 @@ function drawArcs(state) {
         })
         .style('fill', '#1a53ff')
         .style({
-        stroke: '#1a53ff',
-        'stroke-width': '1px'
+            'stroke': '#1a53ff',
+            'stroke-width': '1px'
         })
     }
 }

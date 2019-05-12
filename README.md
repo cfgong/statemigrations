@@ -13,13 +13,14 @@ To do (Ashu):
 
 Crystal:   
 Status:  
-- working on styling
+- implemented a better legend
 
 To do (Crystal):   
-- boostraps the whole thing to make it look nice
+- figure out style alignment
 
 Bugs:
 - buggy onhold feature for two word states
 
 Resources
 - [Stack Overflow: retrieve slider range value](https://stackoverflow.com/questions/29103818/how-can-i-retrieve-and-display-slider-range-value)
+- [Stack Overflow: add space between two words](https://stackoverflow.com/questions/15343163/add-a-space-between-two-words)

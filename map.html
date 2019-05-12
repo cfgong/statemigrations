@@ -3,37 +3,30 @@
 
 <head>
   <title> State Migrations </title>
-  <!-- import css -->
-  <link rel="stylesheet" type="text/css" href="rangeslider.css">
+  <!-- css -->
   <link rel="stylesheet" type="text/css" href="map.css">
+</head>
+<body>
+  <!--
+    The most popular state to move to from State A was state B in year. 
+    State A was the most popular state to move to from state(s): A, B, C in year. 
+  -->
+  <div class="col-xs-12">
+    <h1 id="title"></h1>
+  </div>
+  <div class = "col-xs-12" id = "dialoguebox"></div>
+  <div class = "col-xs-12" id = "map"></div>
+  <div class = "col-xs-12" id = "yearslider"></div>
+  <div class = "col-xs-12" id = "legend"></div>
+  
   <!-- import necessary js libraries -->
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="http://d3js.org/topojson.v1.min.js"></script>
-
-  <!-- bootstraps; css, jquery, jss -->
+  <!-- bootstraps: css, jquery, jss -->
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-</head>
-
-<body>
-  <h1 id="title"></h1>
-  <div id = "middlepage"></div>
-    <div id = "dialoguebox"></div>
-    <div id = "map"></div>
-    <div id = "legend">
-      <div id = "yearslider"></div>
-      <p>
-        <span style= "color: blue"> STATE A &#8594; SELECTED STATE (hover or click)</span>: Largest proportion of those who
-      left state A in the given year moved to selected state 
-      </p>
-      <p>
-        <span style = "color: red"> SELECTED STATE (hover or click) &#8594; STATE B</span>: Largest proportion of those who
-      left selected state in the given year moved to state B
-      </p>
-    </div>
-  </div>
+  <!-- map javascript-->
   <script src="map.js"></script>
 </body>
 

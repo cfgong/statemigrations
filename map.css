@@ -2,53 +2,38 @@
     --slider-thumb-color: purple;
     --background-color: #e5e5e5;
 }
-.states {
-    fill: var(--background-color);
-    stroke: white;
-    stroke-width:2px;
+/** body **/
+h1 { 
+    text-align: center;
 }
-
-/** background colors, for testing **/
-/**
-#map {
-    background-color: orange;
-}
-
-#legend {
-    background-color: aqua;
-}
-**/
-/** actual css **/
-
+/** map and arcs **/
 #map {
     justify-content: center;
     display: flex;
     align-items: center;
 }
-
 .states {
+    fill: var(--background-color);
+    stroke: white;
+    stroke-width:2px;
     cursor: pointer;
 }
-
-
-h1 { }
-
-
 #dialoguebox {
+    height: 10px;
+    text-align: center;
+    /**
     display: flex;
     position: absolute;
     margin: 0;
     width: 300px;
-    /**
+    
     margin-left: 150px;
     top: 50%;
     margin-top: 150px;
     font-size: 20px;
     **/
 }
-
-/** slider styling **/
-
+/** slider and legend **/
 #slider {
   -webkit-appearance: none;
   height: 15px;
@@ -61,7 +46,7 @@ h1 { }
 #legend {}
 
 #yearslider{
-    width: 100%;
+    /**width: 100%;**/
 }
 
 #slider::-webkit-slider-thumb {
@@ -83,7 +68,7 @@ h1 { }
 }
 
 input[type="range"] {
-    width: 100%;
+    /**width: 100%;**/
     margin: 0;
     box-sizing: border-box;
 }
@@ -91,8 +76,7 @@ datalist {
     display: flex;
     justify-content: space-between;
     padding-top: 0px;
+}
+option{
     text-align: center;
-    /**
-    cursor: context-menu;
-    **/
 }
