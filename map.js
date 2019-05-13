@@ -45,7 +45,7 @@ function setTitle(yearDate){
 }
 
 // create slider range thing
-document.getElementById("yearslider").innerHTML += '<input id = "slider" type = "range" min = "' 
+document.getElementById("yearslider").innerHTML += '<input id = "slider" type = "range" min = "'
 + FIRST_YEAR + '" max = "' + LAST_YEAR + '" oninput = "setYear()" list = "steplist">';
 // add labels
 document.getElementById("yearslider").innerHTML += '<datalist id = "steplist"></datalist>';
@@ -191,17 +191,17 @@ function generateLegendMessage(currentState, incoming, outgoing, year){
     var message = "";
     message += "<div>"
     + "<span style = 'color: red'> "+ currentState +" (selected) &#8594; outgoing state</span>: "
-    + "In " + year + ", the most popular state to move to from " + currentState + " (selected) was " + incoming + "." 
+    + "In " + year + ", the most popular state to move to from " + currentState + " (selected) was " + incoming + "."
     + "</div>";
     if (outgoing != undefined){
-        message += "<div>" 
+        message += "<div>"
         + "<span style= 'color: blue'> Incoming state(s) &#8594; "+ currentState +" (selected)</span>: "
         + "In " + year + ", " + currentState + " (selected) was the most popular state to move to from the state(s): ";
 
         if (typeof(outgoing) == "object"){
             var outgoingStateCount = outgoing.length;
             for (var i = 0; i < outgoingStateCount; i++){
-                message += splitDoubleWords(outgoing[i].toString()); 
+                message += splitDoubleWords(outgoing[i].toString());
                 if (i != outgoingStateCount - 1){
                     message += ", ";
                 }
@@ -209,8 +209,8 @@ function generateLegendMessage(currentState, incoming, outgoing, year){
         } else {
             message += outgoing;
         }
-        
-        message += "." 
+
+        message += "."
         + "</div>";
     } else {
         message += "<div>In "+ year + ", " + currentState + " (selected) was the most popular state to move to from no other states. </div>"
@@ -292,6 +292,9 @@ function drawArcs(state) {
     }
 }
 
+/* Function taken from:
+http://bl.ocks.org/vigorousnorth/e95a867b10de1239ab3a
+*/
 function drawArrowArcs(d, sourceName, targetName) {
     var sourceLngLat = d['coordinates'][sourceName],
         targetLngLat = d['coordinates'][targetName];
@@ -327,41 +330,4 @@ function drawArrowArcs(d, sourceName, targetName) {
     + "S" + (midcurve[0]) + "," + (midcurve[1])
     //smooth curve to origin
     + "," + origin[0] + "," + origin[1]
-}
-
-function lngLatToArc(d, sourceName, targetName, bend){
-    // If no bend is supplied, then do the plain square root
-    bend = bend || 1;
-    // `d[sourceName]` and `d[targetname]` are arrays of `[lng, lat]`
-    // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
-
-    var sourceLngLat = d['coordinates'][sourceName],
-        targetLngLat = d['coordinates'][targetName];
-    console.log(sourceLngLat);
-    console.log(targetLngLat);
-
-    if (targetLngLat && sourceLngLat) {
-        var sourceXY = projection( sourceLngLat ),
-        targetXY = projection( targetLngLat );
-
-        // Uncomment this for testing, useful to see if you have any null lng/lat values
-        // if (!targetXY) console.log(d, targetLngLat, targetXY)
-        var sourceX = sourceXY[0],
-        sourceY = sourceXY[1];
-
-        var targetX = targetXY[0],
-        targetY = targetXY[1];
-
-        var dx = targetX - sourceX,
-        dy = targetY - sourceY,
-        dr = Math.sqrt(dx * dx + dy * dy)*bend;
-
-        // To avoid a whirlpool effect, make the bend direction consistent regardless of whether the source is east or west of the target
-        var west_of_source = (targetX - sourceX) < 0;
-        if (west_of_source) return "M" + targetX + "," + targetY + "A" + dr + "," + dr + " 0 0,1 " + sourceX + "," + sourceY;
-        return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + targetX + "," + targetY;
-
-    } else {
-        return "M0,0,l0,0z";
-    }
 }
