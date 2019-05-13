@@ -27,3 +27,4 @@ Resources
 - [Stack Overflow: retrieve slider range value](https://stackoverflow.com/questions/29103818/how-can-i-retrieve-and-display-slider-range-value)
 - [Stack Overflow: add space between two words](https://stackoverflow.com/questions/15343163/add-a-space-between-two-words)
 - [Medium: Deploying a static site to Heroku](https://medium.com/@adityaniloi/how-to-deploy-a-static-website-to-heroku-49d55e07cb94)
+- [Bl.ocks: Arc Map with Scaled Arrowheads](http://bl.ocks.org/vigorousnorth/e95a867b10de1239ab3a)
