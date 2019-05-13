@@ -128,17 +128,16 @@ svg.selectAll('.states')
     })
     .on('click', function(d){
         function getClickDisplayMessage(currentState){
-            return "Click on " +  currentState +
+            return "Click on " +  splitDoubleWords(currentState) +
             " again or click on another state to toggle hold feature. Also, try changing the year with the slider.";
         }
-        var name = d.properties.STATE_ABBR;
+        var name = d.properties.STATE_ABBR.replace(/\s+/g, '');
         if (currentState == "") {
             isClicked = true;
             currentStateDataObject = this;
             currentState = name;
             d3.select(this).style("fill", "steelblue");
             var toDisplay = getClickDisplayMessage(currentState);
-            name = name.replace(/\s+/g, '');
             document.getElementById("dialoguebox").innerHTML = toDisplay;
             return drawArcs(name);
         }
@@ -156,7 +155,6 @@ svg.selectAll('.states')
             d3.select(currentStateDataObject).style("hover", "#cccccc");
             d3.select(this).style("fill", "steelblue");
             currentState = name;
-            console.log("test:" + currentState);
             currentStateDataObject = this;
             var toDisplay = getClickDisplayMessage(currentState);
             document.getElementById("dialoguebox").innerHTML = toDisplay;
@@ -180,12 +178,10 @@ svg.selectAll('.states')
         }
     })
 });
-
+function splitDoubleWords(word){
+    return word.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
 function generateLegendMessage(currentState, incoming, outgoing, year){
-    function splitDoubleWords(word){
-        console.log(word);
-        return word.replace(/([a-z])([A-Z])/g, '$1 $2');
-    }
     currentState = splitDoubleWords(currentState);
     incoming = splitDoubleWords(incoming);
     var message = "";
