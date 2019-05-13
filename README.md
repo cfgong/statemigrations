@@ -5,7 +5,7 @@ Read the writeup [here](https://github.com/cfgong/statemigrations/blob/master/wr
 
 ### Datasets
 - [State to State Migration Dataset](https://www.census.gov/data/tables/time-series/demo/geographic-mobility/state-to-state-migration.html)
-- [List of Laitudes and Longitudes for every State](https://inkplant.com/code/state-latitudes-longitudes)
+- [List of Latitudes and Longitudes for every State](https://inkplant.com/code/state-latitudes-longitudes)
 
 ### Code Resources
 - [Stack Overflow: retrieve slider range value](https://stackoverflow.com/questions/29103818/how-can-i-retrieve-and-display-slider-range-value)
