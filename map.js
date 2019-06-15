@@ -1,36 +1,52 @@
 const FIRST_YEAR = 2005;
-const LAST_YEAR = 2017;
+const LAST_YEAR = 2005; //2017
 const DIAGLOGUE_DEFAULT = "Hover over or select a state.";
+const DATA_MESSAGE_DEFAULT = "Migration data will appear here when a state has been selected.";
 // const LEGEND_DEFAULT = '<div> <span style= "color: blue"> STATE A &#8594; SELECTED STATE </span>: Largest proportion of those who left state A in the given year moved to selected state </div><div><span style = "color: red"> SELECTED STATE &#8594; STATE B</span>: Largest proportion of those who left selected state in the given year moved to state B</div>';
 var currentState = "";
 var currentStateDataObject;
+var allStatesViewBool = true;// bool
+// create radio buttons 
+/* function switchView(inputId){
+    if (inputId=="allStates"){
+        console.log("all");
+        allStatesViewBool = true;
+    } else if (inputId == "oneState"){
+        console.log("one state");
+        allStatesViewBool = false;
+    }
+}
+document.getElementById("switch").innerHTML = '<input type="radio" class = "view" id = "allStates" name = "checkmark" onclick = "switchView(this.id)" checked> View All States <input type="radio" class = "view" id = "oneState" name = "checkmark" onclick = "switchView(this.id)"> View Individual States'; */
 // year to year data dict
 var incoming_states_all = {};
 var outgoing_states_all = {};
+var data_all = {};
 // function to populate dicts by reading csvs
 function load_in_csv(dateYear){
     var incoming_states = {};
     var outgoing_states = {};
+    var data_numbers = {};
     var dataPath = "/data/cleaned/state"+dateYear+".csv";
     d3.csv(dataPath, function(data){
         data.forEach(function(d){
-        var starting_state = d["starting"].replace(/\s+/g, '').toString();
-        var ending_state = d["ending"].replace(/\s+/g, '').toString();
+            var starting_state = d["starting"].replace(/\s+/g, '').toString();
+            var ending_state = d["ending"].replace(/\s+/g, '').toString();
+            var dataKey = starting_state + ending_state;
+            data_numbers[dataKey] = d["data"];
+            incoming_states[starting_state] = ending_state;
 
-        incoming_states[starting_state] = ending_state;
-
-        var outgoing_states_list = outgoing_states[ending_state];
-        if (outgoing_states_list == undefined){
-            outgoing_states[ending_state] = new Array();
-            outgoing_states[ending_state].push([starting_state]);
-        } else {
-            outgoing_states[ending_state].push([starting_state]);
-        }
-
+            var outgoing_states_list = outgoing_states[ending_state];
+            if (outgoing_states_list == undefined){
+                outgoing_states[ending_state] = new Array();
+                outgoing_states[ending_state].push([starting_state]);
+            } else {
+                outgoing_states[ending_state].push([starting_state]);
+            }
         });
     });
     incoming_states_all[dateYear] = incoming_states;
     outgoing_states_all[dateYear] = outgoing_states;
+    data_all[dateYear] = data_numbers;
 }
 // load in data for all the years
 for (var i = FIRST_YEAR; i <= LAST_YEAR; i++){
@@ -71,6 +87,7 @@ function setYear(){
 document.getElementById("dialoguebox").innerHTML = DIAGLOGUE_DEFAULT;
 // set legend message default
 document.getElementById("legend").innerHTML = generateLegendMessage("STATE", "N/A", "N/A", currYear);
+document.getElementById("data").innerHTML = DATA_MESSAGE_DEFAULT;
 
 // for the map drawing and arc graphing
 var width = 960,
@@ -124,6 +141,7 @@ svg.selectAll('.states')
             d3.select(outgoing_id).remove();
             document.getElementById("dialoguebox").innerHTML = DIAGLOGUE_DEFAULT;
             document.getElementById("legend").innerHTML = generateLegendMessage("STATE", "N/A", "N/A", currYear);
+            document.getElementById("data").innerHTML = DATA_MESSAGE_DEFAULT;
         }
     })
     .on('click', function(d){
@@ -181,9 +199,40 @@ svg.selectAll('.states')
 function splitDoubleWords(word){
     return word.replace(/([a-z])([A-Z])/g, '$1 $2');
 }
+
+function generateDataMessageHelper(state1, state2, year){
+    var dataKey = (state1 + state2).replace(/\s+/g, '').toString();
+    var number = data_all[year][dataKey];
+    var dataMessage = "";
+    if (number != undefined){
+        dataMessage = splitDoubleWords(state1) + " &#8594; " + splitDoubleWords(state2) + ": "+ number + " people" + "<br>";
+    }
+    return dataMessage;
+}
+function generateDataMessage(currentState, incoming, outgoing, year){
+    var dataMessage = generateDataMessageHelper(currentState, incoming, year);
+
+    currentState = splitDoubleWords(currentState);
+    incoming = splitDoubleWords(incoming);
+
+    if (outgoing != undefined){
+        if (typeof(outgoing) == "object"){
+            var outgoingStateCount = outgoing.length;
+            for (var i = 0; i < outgoingStateCount; i++){
+                var outgoing_state = outgoing[i].toString();
+                dataMessage += generateDataMessageHelper(outgoing_state, currentState, year);
+            }
+        } else {
+            dataMessage += generateDataMessageHelper(outgoing, currentState, year);
+        }
+    } 
+    return dataMessage;
+}
+
 function generateLegendMessage(currentState, incoming, outgoing, year){
     currentState = splitDoubleWords(currentState);
     incoming = splitDoubleWords(incoming);
+
     var message = "";
     message += "<div>"
     + "<span style = 'color: red'> "+ currentState +" (selected) &#8594; outgoing state</span>: "
@@ -195,9 +244,11 @@ function generateLegendMessage(currentState, incoming, outgoing, year){
         + "In " + year + ", " + currentState + " (selected) was the most popular state to move to from the state(s): ";
 
         if (typeof(outgoing) == "object"){
+            
             var outgoingStateCount = outgoing.length;
             for (var i = 0; i < outgoingStateCount; i++){
-                message += splitDoubleWords(outgoing[i].toString());
+                var outgoing_state = splitDoubleWords(outgoing[i].toString());
+                message += outgoing_state;
                 if (i != outgoingStateCount - 1){
                     message += ", ";
                 }
@@ -206,11 +257,11 @@ function generateLegendMessage(currentState, incoming, outgoing, year){
             message += outgoing;
         }
 
-        message += "."
-        + "</div>";
+        message += ".";
     } else {
-        message += "<div>In "+ year + ", " + currentState + " (selected) was the most popular state to move to from no other states. </div>"
+        message += "<div>In "+ year + ", " + currentState + " (selected) was the most popular state to move to from no other states."
     }
+    message += "</div>";
     return message;
 }
 
@@ -231,6 +282,7 @@ function drawArcs(state) {
     var outgoing = outgoing_states[state];
     var outgoingcoords = [];
     document.getElementById("legend").innerHTML = generateLegendMessage(state, incoming, outgoing, currYear);
+    document.getElementById("data").innerHTML = generateDataMessage(state, incoming, outgoing, currYear);
     if (outgoing != undefined) {
         for (var i = 0; i < outgoing.length; i++) {
             var coord = state_centers[outgoing[i]];

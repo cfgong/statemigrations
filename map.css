@@ -18,8 +18,8 @@ h1 {
     stroke-width:2px;
     cursor: pointer;
 }
-#dialoguebox {
-    height: 10px;
+#dialoguebox, #switch {
+    height: 15px;
     text-align: center;
     /**
     display: flex;
@@ -78,5 +78,11 @@ datalist {
     padding-top: 0px;
 }
 option{
+    text-align: center;
+}
+body{
+    size: 12px;
+}
+#data::h1{
     text-align: center;
 }
