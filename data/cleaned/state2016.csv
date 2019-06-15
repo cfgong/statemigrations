@@ -1,52 +1,51 @@
-﻿starting,ending
-Alabama,Georgia
-Alaska,Washington
-Arizona,California
-Arkansas,Texas
-California,Texas
-Colorado,California
-Connecticut,New York
-Delaware,Maryland
-District of Columbia ,Maryland
-Florida,Georgia
-Georgia,Florida
-Hawaii,California
-Idaho,Washington
-Illinois,Wisconsin
-Indiana,Illinois
-Iowa,Illinois
-Kansas,Missouri
-Kentucky,Tennessee
-Louisiana,Texas
-Maine,Massachusetts
-Maryland,Virginia
-Massachusetts,New Hampshire
-Michigan,Florida
-Minnesota,Wisconsin
-Mississippi,Texas
-Missouri,Kansas
-Montana,Washington
-Nebraska,Iowa
-Nevada,California
-New Hampshire,Massachusetts
-New Jersey,Pennsylvania
-New Mexico,Texas
-New York,Florida
-North Carolina,South Carolina
-North Dakota,Minnesota
-Ohio,Florida
-Oklahoma,Texas
-Oregon,Washington
-Pennsylvania,Florida
-Rhode Island,Massachusetts
-South Carolina,North Carolina
-South Dakota,Minnesota
-Tennessee,Georgia
-Texas,California
-Utah,California
-Vermont,New York
-Virginia,North Carolina
-Washington,California
-West Virginia,Ohio
-Wisconsin,Minnesota
-Wyoming,Colorado
+starting,ending,data
+Alabama,Georgia,18276
+Alaska,Washington,5374
+Arizona,California,33757
+Arkansas,Texas,11986
+California,Texas,69945
+Colorado,California,22540
+Connecticut,New York,16339
+Delaware,Maryland,5674
+Florida,Georgia,44846
+Georgia,Florida,39578
+Hawaii,California,14239
+Idaho,Washington,11619
+Illinois,Wisconsin,31323
+Indiana,Illinois,15203
+Iowa,Illinois,9541
+Kansas,Missouri,19812
+Kentucky,Tennessee,12562
+Louisiana,Texas,27998
+Maine,Massachusetts,3360
+Maryland,Virginia,28394
+Massachusetts,New Hampshire,21063
+Michigan,Florida,19530
+Minnesota,Wisconsin,18036
+Mississippi,Texas,8825
+Missouri,Kansas,22577
+Montana,Washington,4707
+Nebraska,Iowa,6812
+Nevada,California,24656
+New Hampshire,Massachusetts,10579
+New Jersey,Pennsylvania,40118
+New Mexico,Texas,13041
+New York,Florida,60472
+North Carolina,South Carolina,30447
+North Dakota,Minnesota,10745
+Ohio,Florida,29655
+Oklahoma,Texas,30532
+Oregon,Washington,32384
+Pennsylvania,Florida,30258
+Rhode Island,Massachusetts,9776
+South Carolina,North Carolina,32088
+South Dakota,Minnesota,5127
+Tennessee,Georgia,20161
+Texas,California,39109
+Utah,California,11114
+Vermont,New York,3895
+Virginia,North Carolina,35641
+Washington,California,27973
+West Virginia,Ohio,8726
+Wisconsin,Minnesota,18683
+Wyoming,Colorado,3657

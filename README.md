@@ -15,6 +15,8 @@ Make sure you CTRL-SHIFT-R when viewing herokup app.
 ### Design Decisions/ Revisions
 We decided not to implement a feature to display the arrows incoming and outgoing all at once. Although, this feature would allow for more information to be viewed and displayed at the same time, we saw this also resulted in an overload of information, making the graph difficult to view. In particular, a lot of the incoming outgoing arrows ended up overlapping (for example: Indiana &larr; Illinois and Illinois &larr; Indiana), making it difficult to differentiate when arrows were changing across time. 
 
+In the end, we decided to settle on providing the user with more numerical data. When, there is an arrow going from one state to another, we supplement this by also displaying the number of people who migrated in the information box on the side. 
+
 ### Code Resources
 - [Stack Overflow: retrieve slider range value](https://stackoverflow.com/questions/29103818/how-can-i-retrieve-and-display-slider-range-value)
 - [Stack Overflow: add space between two words](https://stackoverflow.com/questions/15343163/add-a-space-between-two-words)

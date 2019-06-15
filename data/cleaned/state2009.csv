@@ -1,52 +1,51 @@
-starting,ending
-Alabama,Georgia
-Alaska,Texas
-Arizona,California
-Arkansas,Texas
-California,Texas
-Colorado,Texas
-Connecticut,New York
-Delaware,Pennsylvania
-District of Columbia ,Maryland
-Florida,Georgia
-Georgia,Florida
-Hawaii,California
-Idaho,Washington
-Illinois,Indiana
-Indiana,Illinois
-Iowa,Illinois
-Kansas,Missouri
-Kentucky,Ohio
-Louisiana,Texas
-Maine,Florida
-Maryland,Virginia
-Massachusetts,New York
-Michigan,Florida
-Minnesota,Wisconsin
-Mississippi,Louisiana
-Missouri,Kansas
-Montana,Washington
-Nebraska,Iowa
-Nevada,California
-New Hampshire,Massachusetts
-New Jersey,Pennsylvania
-New Mexico,Texas
-New York,Florida
-North Carolina,Florida
-North Dakota,Minnesota
-Ohio,Florida
-Oklahoma,Texas
-Oregon,Washington
-Pennsylvania,New York
-Rhode Island,Massachusetts
-South Carolina,North Carolina
-South Dakota,Iowa
-Tennessee,Kentucky
-Texas,California
-Utah,California
-Vermont,New York
-Virginia,North Carolina
-Washington,California
-West Virginia,Ohio
-Wisconsin,Minnesota
-Wyoming,Colorado
+starting,ending,data
+Alabama,Georgia,18302
+Alaska,Texas,9457
+Arizona,California,34040
+Arkansas,Texas,10856
+California,Texas,61270
+Colorado,Texas,19748
+Connecticut,New York,12522
+Delaware,Pennsylvania,5805
+Florida,Georgia,43170
+Georgia,Florida,33835
+Hawaii,California,13042
+Idaho,Washington,8128
+Illinois,Indiana,28173
+Indiana,Illinois,19672
+Iowa,Illinois,11109
+Kansas,Missouri,18757
+Kentucky,Ohio,10490
+Louisiana,Texas,26438
+Maine,Florida,4735
+Maryland,Virginia,26226
+Massachusetts,New York,17239
+Michigan,Florida,19440
+Minnesota,Wisconsin,16937
+Mississippi,Louisiana,10373
+Missouri,Kansas,24307
+Montana,Washington,3050
+Nebraska,Iowa,7380
+Nevada,California,32333
+New Hampshire,Massachusetts,10775
+New Jersey,Pennsylvania,38000
+New Mexico,Texas,15279
+New York,Florida,53482
+North Carolina,Florida,25128
+North Dakota,Minnesota,7160
+Ohio,Florida,21346
+Oklahoma,Texas,25784
+Oregon,Washington,26687
+Pennsylvania,New York,21961
+Rhode Island,Massachusetts,6316
+South Carolina,North Carolina,22374
+South Dakota,Iowa,3562
+Tennessee,Kentucky,14336
+Texas,California,35104
+Utah,California,13401
+Vermont,New York,4407
+Virginia,North Carolina,27787
+Washington,California,33408
+West Virginia,Ohio,5679
+Wisconsin,Minnesota,17189
+Wyoming,Colorado,5630

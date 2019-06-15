@@ -1,22 +1,11 @@
 const FIRST_YEAR = 2005;
-const LAST_YEAR = 2005; //2017
+const LAST_YEAR = 2017
 const DIAGLOGUE_DEFAULT = "Hover over or select a state.";
 const DATA_MESSAGE_DEFAULT = "Migration data will appear here when a state has been selected.";
 // const LEGEND_DEFAULT = '<div> <span style= "color: blue"> STATE A &#8594; SELECTED STATE </span>: Largest proportion of those who left state A in the given year moved to selected state </div><div><span style = "color: red"> SELECTED STATE &#8594; STATE B</span>: Largest proportion of those who left selected state in the given year moved to state B</div>';
 var currentState = "";
 var currentStateDataObject;
 var allStatesViewBool = true;// bool
-// create radio buttons 
-/* function switchView(inputId){
-    if (inputId=="allStates"){
-        console.log("all");
-        allStatesViewBool = true;
-    } else if (inputId == "oneState"){
-        console.log("one state");
-        allStatesViewBool = false;
-    }
-}
-document.getElementById("switch").innerHTML = '<input type="radio" class = "view" id = "allStates" name = "checkmark" onclick = "switchView(this.id)" checked> View All States <input type="radio" class = "view" id = "oneState" name = "checkmark" onclick = "switchView(this.id)"> View Individual States'; */
 // year to year data dict
 var incoming_states_all = {};
 var outgoing_states_all = {};
